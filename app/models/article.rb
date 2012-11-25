@@ -46,7 +46,7 @@ class Article < Content
   has_and_belongs_to_many :tags
 
   before_create :set_defaults, :create_guid
-  after_create :add_notifications
+  #after_create :add_notifications
   before_save :set_published_at, :ensure_settings_type, :set_permalink
   after_save :post_trigger, :keywords_to_tags, :shorten_url
 
@@ -121,7 +121,25 @@ class Article < Content
     end
 
   end
+  def merge_with(append_id)
 
+      if Article.exists?(append_id)
+        append = Article.find(append_id)
+      else
+        nil
+        return
+      end
+      self.body += append.body
+
+      comments_append = Feedback.find_all_by_article_id(append_id)
+      comments_append.each do |feedback|
+          feedback.article_id = self.id
+          feedback.save
+      end
+      self.save
+      Article.destroy(append_id)
+      self
+    end
   def year_url
     published_at.year.to_s
   end

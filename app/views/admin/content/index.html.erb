@@ -7,7 +7,7 @@
   :before   => "Element.show('spinner')",
   :complete => "Element.hide('spinner')" \
   do %>
-
+ <p> Flash: <%=flash[:notice]%>
 <table class="zebra-striped clearfix">
     <tr class='noborder'>
       <td colspan=5>

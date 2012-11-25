@@ -41,6 +41,12 @@ Given /^the blog is set up$/ do
                 :profile_id => 1,
                 :name => 'admin',
                 :state => 'active'})
+  User.create!({:login => 'dummy_user',
+                :password => 'bbbbbbbb',
+                :email => 'dummy@snow.com',
+                :profile_id => 2,
+                :name => 'dummY_user',
+                :state => 'active'})
 end
 
 And /^I am logged into the admin panel$/ do
@@ -54,7 +60,17 @@ And /^I am logged into the admin panel$/ do
     assert page.has_content?('Login successful')
   end
 end
-
+And /^I am logged as normal user$/ do
+  visit '/accounts/login'
+  fill_in 'user_login', :with => 'dummy_user'
+  fill_in 'user_password', :with => 'bbbbbbbb'
+  click_button 'Login'
+  if page.respond_to? :should
+    page.should have_content('Login successful')
+  else
+    assert page.has_content?('Login successful')
+  end
+end
 # Single-line step scoper
 When /^(.*) within (.*[^:])$/ do |step, parent|
   with_scope(parent) { When step }
@@ -72,7 +88,10 @@ end
 When /^(?:|I )go to (.+)$/ do |page_name|
   visit path_to(page_name)
 end
-
+When /^(?:|I )edit "(.+)"$/ do |article_title|
+  id= Article.find_by_title(article_title).id.to_s
+  visit path_to("the edit page")+"/"+id
+end
 When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
 end
