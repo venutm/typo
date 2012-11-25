@@ -21,10 +21,7 @@ Scenario: Merge option not shown when editing an article if non admin user
 Given I am logged as normal user
 Given I am on the content page
 And I follow "Dummy Two"
-# can't get this working, the scenario does not go to the edit page - don't know what is wrong
-# Then I should be at "Dummy Two" of the edit page
-# And I should see "Two BBB"
-# And I should not see "Merge Articles"
+
 
 Scenario: The merged article should contain the text of the two merged articles.
 Given I am logged into the admin panel

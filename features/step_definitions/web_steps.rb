@@ -278,7 +278,15 @@ Then /^(?:|I )should be on (.+)$/ do |page_name|
     assert_equal path_to(page_name), current_path
   end
 end
-
+Then /^(?:|I )should be at "(.+)" of (.+)$/ do |title, page_name|
+  current_path = URI.parse(current_url).path
+  id= Article.find_by_title(title).id.to_s
+  if current_path.respond_to? :should
+    current_path.should == path_to(page_name)+"/"+id
+  else
+    assert_equal path_to(page_name)+"/"+id, current_path
+  end
+end
 Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
   query = URI.parse(current_url).query
   actual_params = query ? CGI.parse(query) : {}
